@@ -1,4 +1,4 @@
-# GDP and Education
+# GDP and Income Levels
 Sharon Teo  
 June 19, 2016  
 
@@ -15,7 +15,7 @@ library(dplyr)
 ```
 
 # Introduction
-The purpose of this project is to visualize GDP across countries and income groups using the dataset  provided by client. The data set comes from worldbank.org. The first data set consists of gross domestic product ranking by countries for economies around the world while the second data set consists of education statistics and income levels. R is used to clean, merge the two files together, analyze and summarize the findings from the given data set.
+The purpose of this project is to visualize GDP across countries and income levels using the dataset  provided by client. The data set comes from worldbank.org. The first data set consists of gross domestic product ranking by countries for economies around the world while the second data set consists of education statistics and income levels. R is used to clean, merge the two files together, analyze and summarize the findings from the given data set.
 
 # Download files from World Bank website
 
@@ -49,17 +49,12 @@ GDPdata$Ranking <- as.numeric(GDPdata$Ranking)
 GDPdata$GDP <- gsub(",","",GDPdata$GDP)
 # Convert GDP to numeric
 GDPdata$GDP <- as.numeric(GDPdata$GDP)
-head(GDPdata)
+GDPdata=na.exclude(GDPdata)
+nrow(GDPdata)
 ```
 
 ```
-##    Country.Code Ranking     Short.Name      GDP
-## 5           USA       1  United States 16244600
-## 6           CHN       2          China  8227103
-## 7           JPN       3          Japan  5959718
-## 8           DEU       4        Germany  3428131
-## 9           FRA       5         France  2612878
-## 10          GBR       6 United Kingdom  2471784
+## [1] 190
 ```
 
 ```r
@@ -70,40 +65,29 @@ EDUraw[2] <- NULL
 EDUdata <- EDUraw[2:240,]
 # Assign new headings to EDUdata
 names(EDUdata) <- c("Country.Code", "Income.Group", "Short.Name")
-head(EDUdata)
-```
-
-```
-##   Country.Code         Income.Group           Short.Name
-## 2          ABW High income: nonOECD                Aruba
-## 3          ADO High income: nonOECD              Andorra
-## 4          AFG           Low income          Afghanistan
-## 5          AGO  Lower middle income               Angola
-## 6          ALB  Upper middle income              Albania
-## 7          ARE High income: nonOECD United Arab Emirates
-```
-
-```r
 # Merge GDP and EDU
-GDPEDU <- merge(GDPdata,EDUdata,by="Country.Code")
-head(GDPEDU)
+GDPEDU <- merge(EDUdata,GDPdata,by="Country.Code")
+GDPEDU=subset(GDPEDU, is.na(GDPEDU$Country.Code)== FALSE)
+summary(GDPEDU)
 ```
 
 ```
-##   Country.Code Ranking         Short.Name.x    GDP         Income.Group
-## 1          ABW     161                Aruba   2584 High income: nonOECD
-## 2          ADO      NA              Andorra     NA High income: nonOECD
-## 3          AFG     105          Afghanistan  20497           Low income
-## 4          AGO      60               Angola 114147  Lower middle income
-## 5          ALB     125              Albania  12648  Upper middle income
-## 6          ARE      32 United Arab Emirates 348595 High income: nonOECD
-##           Short.Name.y
-## 1                Aruba
-## 2              Andorra
-## 3          Afghanistan
-## 4               Angola
-## 5              Albania
-## 6 United Arab Emirates
+##   Country.Code               Income.Group              Short.Name.x
+##  ABW    :  1                       : 0    Afghanistan        :  1  
+##  AFG    :  1   High income: nonOECD:23    Albania            :  1  
+##  AGO    :  1   High income: OECD   :30    Algeria            :  1  
+##  ALB    :  1   Income Group        : 0    Angola             :  1  
+##  ARE    :  1   Low income          :37    Antigua and Barbuda:  1  
+##  ARG    :  1   Lower middle income :54    Argentina          :  1  
+##  (Other):183   Upper middle income :45    (Other)            :183  
+##     Ranking       Short.Name.y            GDP          
+##  Min.   :  1.00   Length:189         Min.   :      40  
+##  1st Qu.: 48.00   Class :character   1st Qu.:    6972  
+##  Median : 95.00   Mode  :character   Median :   28242  
+##  Mean   : 95.31                      Mean   :  379597  
+##  3rd Qu.:143.00                      3rd Qu.:  205789  
+##  Max.   :190.00                      Max.   :16244600  
+## 
 ```
 
 # Match the data based on the country shortcode. How many of the IDs match?  
@@ -114,22 +98,22 @@ summary(GDPEDU)
 ```
 
 ```
-##  Country.Code          Ranking       Short.Name.x            GDP          
-##  Length:224         Min.   :  1.00   Length:224         Min.   :      40  
-##  Class :character   1st Qu.: 48.00   Class :character   1st Qu.:    7700  
-##  Mode  :character   Median : 95.00   Mode  :character   Median :   37489  
-##                     Mean   : 95.31                      Mean   : 1460821  
-##                     3rd Qu.:143.00                      3rd Qu.:  263046  
-##                     Max.   :190.00                      Max.   :72440449  
-##                     NA's   :35                          NA's   :21        
-##                Income.Group         Short.Name.y
-##                      :14    Afghanistan   :  1  
-##  High income: nonOECD:37    Albania       :  1  
-##  High income: OECD   :30    Algeria       :  1  
-##  Income Group        : 0    American Samoa:  1  
-##  Low income          :40    Andorra       :  1  
-##  Lower middle income :56    Angola        :  1  
-##  Upper middle income :47    (Other)       :218
+##   Country.Code               Income.Group              Short.Name.x
+##  ABW    :  1                       : 0    Afghanistan        :  1  
+##  AFG    :  1   High income: nonOECD:23    Albania            :  1  
+##  AGO    :  1   High income: OECD   :30    Algeria            :  1  
+##  ALB    :  1   Income Group        : 0    Angola             :  1  
+##  ARE    :  1   Low income          :37    Antigua and Barbuda:  1  
+##  ARG    :  1   Lower middle income :54    Argentina          :  1  
+##  (Other):183   Upper middle income :45    (Other)            :183  
+##     Ranking       Short.Name.y            GDP          
+##  Min.   :  1.00   Length:189         Min.   :      40  
+##  1st Qu.: 48.00   Class :character   1st Qu.:    6972  
+##  Median : 95.00   Mode  :character   Median :   28242  
+##  Mean   : 95.31                      Mean   :  379597  
+##  3rd Qu.:143.00                      3rd Qu.:  205789  
+##  Max.   :190.00                      Max.   :16244600  
+## 
 ```
 
 # Sort the data frame in ascending order by GDP rank (so United States is last). What is the 13th country in the resulting data frame?  
@@ -137,42 +121,7 @@ summary(GDPEDU)
 
 ```r
 #sort by GDP (ascending)
-NEWGE <- GDPEDU[order(GDPEDU$GDP),] 
-#We See There is 14 blank Income Groups
-NEWGE=subset(NEWGE, NEWGE$Income.Group!="")
-NEWGE=subset(NEWGE, NEWGE$Income.Group!="Income Group")
-NEWGE[1:13,1:5]
-```
-
-```
-##     Country.Code Ranking                   Short.Name.x GDP
-## 204          TUV     190                         Tuvalu  40
-## 105          KIR     189                       Kiribati 175
-## 132          MHL     188               Marshall Islands 182
-## 161          PLW     187                          Palau 228
-## 185          STP     186          São Tomé and Principe 263
-## 68           FSM     185          Micronesia, Fed. Sts. 326
-## 200          TON     184                          Tonga 472
-## 51           DMA     183                       Dominica 480
-## 42           COM     182                        Comoros 596
-## 219          WSM     181                          Samoa 684
-## 212          VCT     180 St. Vincent and the Grenadines 713
-## 78           GRD     178                        Grenada 767
-## 106          KNA     178            St. Kitts and Nevis 767
-##            Income.Group
-## 204 Lower middle income
-## 105 Lower middle income
-## 132 Lower middle income
-## 161 Upper middle income
-## 185 Lower middle income
-## 68  Lower middle income
-## 200 Lower middle income
-## 51  Upper middle income
-## 42           Low income
-## 219 Lower middle income
-## 212 Upper middle income
-## 78  Upper middle income
-## 106 Upper middle income
+NEWGE <- GDPEDU[order(GDPEDU$Ranking),] 
 ```
 # What are the average GDP rankings for the "High income: OECD" and "High income: nonOECD" groups? 
 ##High Income OECD=32.97 High Income: nonOECD=91.91
@@ -185,22 +134,22 @@ summary(HOECD)
 ```
 
 ```
-##  Country.Code          Ranking       Short.Name.x            GDP          
-##  Length:30          Min.   :  1.00   Length:30          Min.   :   13579  
-##  Class :character   1st Qu.: 12.25   Class :character   1st Qu.:  211147  
-##  Mode  :character   Median : 24.50   Mode  :character   Median :  486528  
-##                     Mean   : 32.97                      Mean   : 1483917  
-##                     3rd Qu.: 45.75                      3rd Qu.: 1480047  
-##                     Max.   :122.00                      Max.   :16244600  
-##                                                                           
-##                Income.Group         Short.Name.y
-##                      : 0    Australia     : 1   
-##  High income: nonOECD: 0    Austria       : 1   
-##  High income: OECD   :30    Belgium       : 1   
-##  Income Group        : 0    Canada        : 1   
-##  Low income          : 0    Czech Republic: 1   
-##  Lower middle income : 0    Denmark       : 1   
-##  Upper middle income : 0    (Other)       :24
+##   Country.Code               Income.Group         Short.Name.x
+##  AUS    : 1                        : 0    Australia     : 1   
+##  AUT    : 1    High income: nonOECD: 0    Austria       : 1   
+##  BEL    : 1    High income: OECD   :30    Belgium       : 1   
+##  CAN    : 1    Income Group        : 0    Canada        : 1   
+##  CHE    : 1    Low income          : 0    Czech Republic: 1   
+##  CZE    : 1    Lower middle income : 0    Denmark       : 1   
+##  (Other):24    Upper middle income : 0    (Other)       :24   
+##     Ranking       Short.Name.y            GDP          
+##  Min.   :  1.00   Length:30          Min.   :   13579  
+##  1st Qu.: 12.25   Class :character   1st Qu.:  211147  
+##  Median : 24.50   Mode  :character   Median :  486528  
+##  Mean   : 32.97                      Mean   : 1483917  
+##  3rd Qu.: 45.75                      3rd Qu.: 1480047  
+##  Max.   :122.00                      Max.   :16244600  
+## 
 ```
 
 ```r
@@ -208,22 +157,22 @@ summary(HNOECD)
 ```
 
 ```
-##  Country.Code          Ranking       Short.Name.x            GDP        
-##  Length:37          Min.   : 19.00   Length:37          Min.   :  2584  
-##  Class :character   1st Qu.: 58.50   Class :character   1st Qu.: 12838  
-##  Mode  :character   Median : 94.00   Mode  :character   Median : 28373  
-##                     Mean   : 91.91                      Mean   :104350  
-##                     3rd Qu.:125.00                      3rd Qu.:131205  
-##                     Max.   :161.00                      Max.   :711050  
-##                     NA's   :14                          NA's   :14      
-##                Income.Group   Short.Name.y
-##                      : 0    Andorra : 1   
-##  High income: nonOECD:37    Aruba   : 1   
-##  High income: OECD   : 0    Bahrain : 1   
-##  Income Group        : 0    Barbados: 1   
-##  Low income          : 0    Bermuda : 1   
-##  Lower middle income : 0    Brunei  : 1   
-##  Upper middle income : 0    (Other) :31
+##   Country.Code               Income.Group   Short.Name.x    Ranking      
+##  ABW    : 1                        : 0    Aruba   : 1    Min.   : 19.00  
+##  ARE    : 1    High income: nonOECD:23    Bahrain : 1    1st Qu.: 58.50  
+##  BHR    : 1    High income: OECD   : 0    Barbados: 1    Median : 94.00  
+##  BHS    : 1    Income Group        : 0    Bermuda : 1    Mean   : 91.91  
+##  BMU    : 1    Low income          : 0    Brunei  : 1    3rd Qu.:125.00  
+##  BRB    : 1    Lower middle income : 0    Croatia : 1    Max.   :161.00  
+##  (Other):17    Upper middle income : 0    (Other) :17                    
+##  Short.Name.y            GDP        
+##  Length:23          Min.   :  2584  
+##  Class :character   1st Qu.: 12838  
+##  Mode  :character   Median : 28373  
+##                     Mean   :104350  
+##                     3rd Qu.:131205  
+##                     Max.   :711050  
+## 
 ```
 # Plot the GDP for all of the countries. Use ggplot2 to color your plot by Income Group.
 
@@ -242,11 +191,11 @@ INC.TAB
 ```
 ## 
 ##                      High income: nonOECD    High income: OECD 
-##                    0                   37                   30 
+##                    0                   23                   30 
 ##         Income Group           Low income  Lower middle income 
-##                    0                   40                   56 
+##                    0                   37                   54 
 ##  Upper middle income 
-##                   47
+##                   45
 ```
 
 ```r
@@ -275,7 +224,7 @@ g
 ![](GrossDomesticIncomeEducation_files/figure-html/unnamed-chunk-8-4.png)<!-- -->
 
 #Cut the GDP ranking into 5 separate quantile groups. Make a table versus Income.Group. How many countries are Lower middle income but among the 38 nations with highest GDP?
-##3
+##4
 
 
 ```r
@@ -287,18 +236,18 @@ table(NEWGE$quantile,NEWGE$Income.Group)
 ```
 ##    
 ##        High income: nonOECD High income: OECD Income Group Low income
-##   1  0                    3                 0            0         12
-##   2  0                    5                 1            0         18
-##   3  0                    8                 2            0          6
-##   4  0                    6                14            0          1
-##   5  0                    1                13            0          0
+##   1  0                    2                 0            0         11
+##   2  0                    4                 1            0         16
+##   3  0                    8                 1            0          9
+##   4  0                    5                10            0          1
+##   5  0                    4                18            0          0
 ##    
 ##     Lower middle income Upper middle income
-##   1                  16                  11
-##   2                  10                   8
-##   3                  15                  11
-##   4                  10                  11
-##   5                   3                   4
+##   1                  16                   9
+##   2                   9                   8
+##   3                  11                   9
+##   4                  14                   8
+##   5                   4                  11
 ```
 
 # Conclusion
