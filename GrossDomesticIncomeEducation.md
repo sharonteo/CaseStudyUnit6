@@ -107,7 +107,7 @@ head(GDPEDU)
 ```
 
 # Match the data based on the country shortcode. How many of the IDs match?  
-##224
+##224 - 35 NA's = 189 IDs match
 
 ```r
 summary(GDPEDU)
@@ -175,7 +175,7 @@ NEWGE[1:13,1:5]
 ## 106 Upper middle income
 ```
 # What are the average GDP rankings for the "High income: OECD" and "High income: nonOECD" groups? 
-##High Income OECD=$1483917 High Income: nonOECD=$104350
+##High Income OECD=32.97 High Income: nonOECD=91.91
 
 ```r
 #Taking a subset of data that consist only of income in High OECD and nonOECD
