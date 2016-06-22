@@ -175,7 +175,7 @@ NEWGE[1:13,1:5]
 ## 106 Upper middle income
 ```
 # What are the average GDP rankings for the "High income: OECD" and "High income: nonOECD" groups? 
-##High Income OECD=$1483917 High Income: nonOECD=$104350
+##High Income Mean OECD Ranking = 32.97 High Income Mean Ranking: nonOECD= 91.91
 
 ```r
 #Taking a subset of data that consist only of income in High OECD and nonOECD
