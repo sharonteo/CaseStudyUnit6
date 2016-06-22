@@ -3,6 +3,7 @@ The purpose of this project is to analyze the relationship between the GDP from 
 from the World Bank website are used in this analysis. R is used to clean, merge the two files together, analyze and summarize the findings
 The questions in the analysis are as follows:
 Questions
+
 1 Match the data based on the country shortcode. How many of the IDs match?
 
 2 Sort the data frame in ascending order by GDP rank (so United States is last). What is the 13th country in the resulting data frame?
