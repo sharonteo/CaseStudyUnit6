@@ -3,7 +3,7 @@ The purpose of this project is to analyze the relationship between the GDP from 
 from the World Bank website are used in this analysis. R is used to clean, merge the two files together, analyze and summarize the findings.
 The questions in the analysis are as follows:
 
-Questions
+**Questions**
 
 1. Match the data based on the country shortcode. How many of the IDs match?
 
