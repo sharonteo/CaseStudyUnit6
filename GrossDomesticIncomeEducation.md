@@ -107,7 +107,7 @@ head(GDPEDU)
 ```
 
 # Match the data based on the country shortcode. How many of the IDs match?  
-##224
+##224 - 35 NA = 189 IDs match
 
 ```r
 summary(GDPEDU)
